@@ -32,6 +32,11 @@ def get_connection(args):
     )
 
 
+def truthy(s):
+    s = str(s).lower()
+    return s in ['true', '1', 't', 'y']
+
+
 def get_args():
     defaults = {
         'ec2-instance-id': os.environ.get('EC2_INSTANCE_ID'),
@@ -39,6 +44,7 @@ def get_args():
         'aws-access-key-id': os.environ.get('AWS_ACCESS_KEY_ID'),
         'aws-secret-access-key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
         'aws-tag': os.environ.get('AWS_TAG', 'aws:autoscaling:groupName'),
+        'no-i': truthy(os.environ.get('NO_I', '0')),
     }
     description = 'aws-hostname, a tool to output valid AWS hostnames'
     formatter_class = argparse.RawDescriptionHelpFormatter
@@ -70,6 +76,11 @@ def get_args():
                         help='AWS Tag to use',
                         default=defaults['aws-tag'],
                         dest='aws_tag')
+    parser.add_argument('-n', '--no-i',
+                        action='store_true',
+                        help='Remove "i-" from instance-id',
+                        default=defaults['no-i'],
+                        dest='no_i')
     return parser.parse_args()
 
 
@@ -90,10 +101,12 @@ def main():
             if 'Name' in i.tags:
                 hostname = i.tags['Name'].strip()
                 hostname = hostname.replace('_', '-')
-
-            if args.aws_tag in i.tags:
+            elif args.aws_tag in i.tags:
                 stripped_tag = i.tags[args.aws_tag].strip()
-                hostname = "{0}-{1}".format(stripped_tag, i.id)
+                instance_id = str(i.id)
+                if args.no_i is True:
+                    instance_id = instance_id.replace('i-', '')
+                hostname = "{0}-{1}".format(stripped_tag, instance_id)
                 hostname = hostname.replace('_', '-')
 
     if hostname is None:

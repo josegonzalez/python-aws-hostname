@@ -1,3 +1,9 @@
+python-aws-hostname (0.0.3) stable; urgency=low
+
+  * Add the ability to remove 'i-' prefix from instance_id using --no-i
+
+ -- Jose Diaz-Gonzalez <jose@seatgeek.com>  Mon, 05 May 2014 16:16:00 -0500
+
 python-aws-hostname (0.0.2) stable; urgency=low
 
   * Fix issues with error output
