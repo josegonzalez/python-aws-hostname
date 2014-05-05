@@ -9,8 +9,9 @@ import re
 import sys
 
 
-def print_warning(*objs):
+def print_error(*objs):
     print("WARNING:", *objs, file=sys.stderr)
+    sys.exit(1)
 
 
 def is_valid_hostname(hostname):
@@ -76,8 +77,7 @@ def main():
     args = get_args()
     conn = get_connection(args)
     if not conn:
-        print_warning("Invalid AWS connection")
-        sys.exit(1)
+        print_error("Invalid AWS connection")
 
     hostname = None
     reservations = conn.get_all_instances()
@@ -86,6 +86,7 @@ def main():
         for i in res.instances:
             if i.id != args.ec2_instance_id:
                 continue
+
             if 'Name' in i.tags:
                 hostname = i.tags['Name'].strip()
                 hostname = hostname.replace('_', '-')
@@ -95,8 +96,13 @@ def main():
                 hostname = "{0}-{1}".format(stripped_tag, i.id)
                 hostname = hostname.replace('_', '-')
 
-    if hostname is not None and is_valid_hostname(hostname):
-        print(hostname)
+    if hostname is None:
+        print_error('No hostname found')
+
+    if not is_valid_hostname(hostname):
+        print_error('Invalid hostname {0}'.format(hostname))
+
+    print(hostname)
 
 if __name__ == '__main__':
     main()

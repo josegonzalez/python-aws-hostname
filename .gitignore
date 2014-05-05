@@ -10,8 +10,11 @@
 dist
 
 # Build files
-build/
-aws_hostname.egg-info/
+build
+dist
+pkg
+*.egg
+*.egg-info
 
 # Debian Files
 debian/files

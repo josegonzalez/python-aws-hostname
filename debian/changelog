@@ -1,3 +1,9 @@
+python-aws-hostname (0.0.2) stable; urgency=low
+
+  * Fix issues with error output
+
+ -- Jose Diaz-Gonzalez <jose@seatgeek.com>  Mon, 05 May 2014 15:25:00 -0500
+
 python-aws-hostname (0.0.1) stable; urgency=low
 
   * Initial public release
