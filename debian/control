@@ -1,0 +1,12 @@
+Source: python-aws-hostname
+Section: python
+Priority: extra
+Maintainer: Jose Diaz-Gonzalez <jose@seatgeek.com>
+Build-Depends: debhelper (>= 9), python, dh-virtualenv
+Standards-Version: 3.9.5
+
+Package: python-aws-hostname
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}
+Homepage: http://github.com/josegonzalez/python-aws-hostname
+Description: Outputs a valid hostname for a given autoscale group instance

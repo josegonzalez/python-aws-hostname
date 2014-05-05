@@ -1,0 +1,24 @@
+*.py[oc]
+
+# Temp files
+*~
+~*
+.*~
+\#*
+.#*
+*#
+dist
+
+# Build files
+build/
+aws_hostname.egg-info/
+
+# Debian Files
+debian/files
+debian/python-aws-hostname*
+
+# Sphinx build
+doc/_build
+
+# Generated man page
+doc/aws_hostname.1
