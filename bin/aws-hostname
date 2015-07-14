@@ -45,6 +45,8 @@ def get_args():
         'aws-secret-access-key': os.environ.get('AWS_SECRET_ACCESS_KEY'),
         'aws-tag': os.environ.get('AWS_TAG', 'aws:autoscaling:groupName'),
         'no-i': truthy(os.environ.get('NO_I', '0')),
+        'use-iam-profile': os.environ.get('USE_IAM_PROFILE', '0'),
+	'delete-instance-id': os.environ.get('DELETE_INSTANCE_ID', '0'),
     }
     description = 'aws-hostname, a tool to output valid AWS hostnames'
     formatter_class = argparse.RawDescriptionHelpFormatter
@@ -81,12 +83,25 @@ def get_args():
                         help='Remove "i-" from instance-id',
                         default=defaults['no-i'],
                         dest='no_i')
+    parser.add_argument('-u', '--use-iam-profile',
+                        action='store_true',
+                        help="Use Attached IAM profile instead of keys",
+                        default=defaults['use-iam-profile'],
+                        dest='use_iam_profile')
+    parser.add_argument('-d' '--delete-instance-id',
+                        action='store_true',
+                        help="Delete instance id from returned hostname",
+                        default=defaults['delete-instance-id'],
+                        dest='delete_instance_id')
     return parser.parse_args()
 
 
 def main():
     args = get_args()
-    conn = get_connection(args)
+    if args.use_iam_profile is True:
+        conn = boto.ec2.connect_to_region(args.ec2_region)
+    else:
+       conn = get_connection(args)
     if not conn:
         print_error("Invalid AWS connection")
 
@@ -98,15 +113,18 @@ def main():
             if i.id != args.ec2_instance_id:
                 continue
 
-            if 'Name' in i.tags:
-                hostname = i.tags['Name'].strip()
-                hostname = hostname.replace('_', '-')
-            elif args.aws_tag in i.tags:
+            if args.aws_tag in i.tags:
                 stripped_tag = i.tags[args.aws_tag].strip()
                 instance_id = str(i.id)
                 if args.no_i is True:
                     instance_id = instance_id.replace('i-', '')
-                hostname = "{0}-{1}".format(stripped_tag, instance_id)
+                if args.delete_instance_id is True:
+                    hostname = stripped_tag
+                else:
+                    hostname = "{0}-{1}".format(stripped_tag, instance_id)
+                hostname = hostname.replace('_', '-')
+            elif 'Name' in i.tags:
+                hostname = i.tags['Name'].strip()
                 hostname = hostname.replace('_', '-')
 
     if hostname is None:
