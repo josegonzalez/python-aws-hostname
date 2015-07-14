@@ -20,9 +20,9 @@ Usage
 
 CLI Usage is as follows::
 
-    aws-hostname [-h] [-r EC2_REGION] [-s AWS_SECRET_ACCESS_KEY] 
-                     [-s AWS_SECRET_ACCESS_KEY] [-i EC2_INSTANCE_ID] [-t Alternate tag to use]
-                     [-u] [-d]
+usage: aws-hostname [-h] [-i EC2_INSTANCE_ID] [-r EC2_REGION]
+                    [-a AWS_ACCESS_KEY_ID] [-s AWS_SECRET_ACCESS_KEY]
+                    [-t AWS_TAG] [-n] [-u] [-d]
 
 You can also use the equivalent environment variables in place of command arguments.
 
