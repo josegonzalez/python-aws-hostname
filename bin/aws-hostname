@@ -88,7 +88,7 @@ def get_args():
                         help="Use Attached IAM profile instead of keys",
                         default=defaults['use-iam-profile'],
                         dest='use_iam_profile')
-    parser.add_argument('-d' '--delete-instance-id',
+    parser.add_argument('-d', '--delete-instance-id',
                         action='store_true',
                         help="Delete instance id from returned hostname",
                         default=defaults['delete-instance-id'],
