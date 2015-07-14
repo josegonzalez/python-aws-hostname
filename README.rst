@@ -20,8 +20,9 @@ Usage
 
 CLI Usage is as follows::
 
-    aws-hostname [-h] [-r EC2_REGION] [-s AWS_SECRET_ACCESS_KEY]
-                     [-s AWS_SECRET_ACCESS_KEY] [-i EC2_INSTANCE_ID]
+usage: aws-hostname [-h] [-i EC2_INSTANCE_ID] [-r EC2_REGION]
+                    [-a AWS_ACCESS_KEY_ID] [-s AWS_SECRET_ACCESS_KEY]
+                    [-t AWS_TAG] [-n] [-u] [-d]
 
 You can also use the equivalent environment variables in place of command arguments.
 
@@ -29,5 +30,7 @@ This command will use the instance id and the tag ``aws:autoscaling:groupName`` 
 
     aws-hostname -r $REGION -a $ACCESS_ID -s $SECRET_KEY -i $INSTANCE_ID > /etc/hostname
     hostname -F /etc/hostname
+    
+You can also run it with the -u flag to connect using IAM profile instead of the access/secret key.
 
 In cases where it is run against a non-autoscale group node, it will fallback to the ``Name`` attribute of the instance.
